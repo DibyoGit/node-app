@@ -1,0 +1,40 @@
+on:
+  pull_request:
+    branches:
+      - feature/obi
+  #  paths-ignore:
+    #  - .github/**
+    
+name: DangerJS | Sonarqube
+
+env:
+  REPO: ${GITHUB_REPOSITORY}
+  FROM: ${GITHUB_HEAD_REF#refs/heads/}
+  TO: ${GITHUB_BASE_REF#refs/heads/}
+  KEY: ${{ github.event.number }}
+
+jobs:
+  danger_check:
+    if: github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]'
+    name: Danger JS
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Danger
+      uses: danger/danger-js@9.1.8
+      env:
+        # SLACK_GIT_TOKEN: ${{ secrets.SLACK_GIT_TOKEN }} # optional
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Notify Slack
+      uses: asconsoft/action-slack@v4.0.1
+      with:
+        channel: '#pr'
+        if_mention: failure,cancelled
+        status: ${{ job.status }}
+        fields: workflow,job,commit,repo,ref,author
+        text_success: ':dizzy: `erp-lms` - this PR is successfully passed the checks for `Dangerjs` :v:'
+        text_failure: ':boom: `erp-lms` - this PR is failed the checks for `Dangerjs` :-1:; working on it :hammer_and_wrench:'
+      env:
+        SLACK_GIT_TOKEN: ${{ secrets.SLACK_GIT_TOKEN }} # optional
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+      if: always() # Pick up events even if the job fails or is canceled.  

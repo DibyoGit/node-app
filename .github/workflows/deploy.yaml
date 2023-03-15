@@ -1,26 +1,27 @@
 
-name: Obi Test
+name: erp-lms-service
 
 on:
   push:
     branches:
-      - feature/obitest
+      - feature/obi/test
 
 jobs:
-  deploy:
+  deploy-Container:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: SSH into EC2 instance and deploy Docker container
-      uses: appleboy/ssh-action@v0.1.5
+    - name: Notify Slack
+      uses: asconsoft/action-slack@v4.0.1
       with:
-        host: ${{ secrets.SERVER_IP }}
-        port: ${{ secrets.SERVER_PORT }}
-        username: ${{ secrets.SERVER_USERNAME }}
-        password: ${{ secrets.EC2_PASSWORD }}
-        script: |
-          docker pull $ECR_REGISTRY/onebillionideas:${IMAGE_TAG}
-          docker stop my-docker-container || true
-          docker rm my-docker-container || true
-          docker run -d -p 8080:8080 $ECR_REGISTRY/onebillionideas:${IMAGE_TAG}"
+        channel: '#deployment'
+        if_mention: failure,cancelled
+        status: ${{ job.status }}
+        fields: workflow,job,commit,repo,ref,author
+        text_success: ':rocket: `erp-lms` is successfully deployed in an EC2 instance'
+        text_failure: ':boom: `erp-lms` has failed to be deployed :-1:; working on it :hammer_and_wrench:'
+      env:
+        SLACK_GIT_TOKEN: ${{ secrets.SLACK_GIT_TOKEN }} # optional
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+      if: always() # Pick up events even if the job fails or is canceled.       
+        
+            

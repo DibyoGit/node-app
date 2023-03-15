@@ -1,13 +1,13 @@
 
-name: Obi Test
+name: erp-lms-service
 
 on:
   push:
     branches:
-      - feature/obi
+      - feature/obi/test
 
 jobs:
-  app-containerize:
+  docker-build-and-push:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -27,8 +27,8 @@ jobs:
       run: |
         docker build -t $ECR_REGISTRY/onebillionideas:erp-lms-v1 .
         docker push $ECR_REGISTRY/onebillionideas:erp-lms-v1
-  deploy:
-    needs: app-containerize
+  deploy-Container:
+    needs: docker-build-and-push
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
