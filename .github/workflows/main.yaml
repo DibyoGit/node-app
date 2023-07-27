@@ -3,7 +3,7 @@ name: CICD Demo
 on:
   push:
     branches:
-      - master
+      - master/stop
 
 jobs:
   build-and-push:
