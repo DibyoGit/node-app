@@ -25,5 +25,5 @@ jobs:
         docker build -t $AWS_ACCOUNT_NUMBER.dkr.ecr.$AWS_REGION.amazonaws.com/dibops:demo .
         docker push $AWS_ACCOUNT_NUMBER.dkr.ecr.$AWS_REGION.amazonaws.com/dibops:demo
       env:
-        AWS_ACCOUNT_NUMBER: 288408890206
-        AWS_REGION: ap-south-1
+        AWS_ACCOUNT_NUMBER: ${{ secrets.AWSA_ACCOUNT_NUMBER }}
+        AWS_REGION:  ${{ secrets.AWS_REGION }}
