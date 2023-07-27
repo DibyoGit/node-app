@@ -23,9 +23,8 @@ jobs:
       env:
         AWS_REGION: ${{ secrets.AWS_REGION }}
         AWS_ACCOUNT_NUMBER: ${{ secrets.AWS_ACCOUNT_NUMBER }}
-        ECR_REGISTRY: dkr.ecr.ap-south-1.amazonaws.com
         IMAGE_TAG: ${{ github.sha }}
       run: |
         aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_NUMBER.dkr.ecr.$AWS_REGION.amazonaws.com
-        docker build -t $AWS_ACCOUNT_NUMBER.$ECR_REGISTRY/dibops:${IMAGE_TAG} .
-        docker push $AWS_ACCOUNT_NUMBER.$ECR_REGISTRY/dibops:${IMAGE_TAG}
+        docker build -t $AWS_ACCOUNT_NUMBER.dkr.ecr.$AWS_REGION.amazonaws.com/dibops:${IMAGE_TAG} .
+        docker push $AWS_ACCOUNT_NUMBER.dkr.ecr.$AWS_REGION.amazonaws.com/dibops:${IMAGE_TAG}
