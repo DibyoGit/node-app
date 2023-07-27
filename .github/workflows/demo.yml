@@ -20,9 +20,9 @@ jobs:
     - name: Login to Amazon ECR
       id: login-ecr
       run: |
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_NUMBER }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+          aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 288408890206.dkr.ecr.ap-south-1.amazonaws.com
     - name: Build and push Docker image
       run: |
         docker build -t dibops .
-        docker tag dibops:latest {{ secrets.AWS_ACCOUNT_NUMBER }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dibops:demo
-        docker push ${{ secrets.AWS_ACCOUNT_NUMBER }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dibops:demo
+        docker tag dibops:latest 288408890206.dkr.ecr.ap-south-1.amazonaws.com/dibops:latest}.amazonaws.com/dibops:demo
+        docker push 288408890206.dkr.ecr.ap-south-1.amazonaws.com/dibops:demo
