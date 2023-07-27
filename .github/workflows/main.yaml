@@ -24,5 +24,6 @@ jobs:
         ECR_REGISTRY: 288408890206.dkr.ecr.ap-south-1.amazonaws.com
         IMAGE_TAG: ${{ github.sha }}
       run: |
+        aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 288408890206.dkr.ecr.ap-south-1.amazonaws.com
         docker build -t $ECR_REGISTRY/dibops:${IMAGE_TAG} .
         docker push $ECR_REGISTRY/dibops:${IMAGE_TAG}
