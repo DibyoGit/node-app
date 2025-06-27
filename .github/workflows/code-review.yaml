@@ -1,0 +1,16 @@
+  name: Bito AI Code Review
+
+  on:
+    pull_request:
+      types: [opened, synchronize, reopened]
+
+  jobs:
+    bito_review:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+
+        - name: Run Bito AI Code Review
+          run: |
+            curl -sSL https://raw.githubusercontent.com/gitbito/CodeReviewAgent/main/bito-actions.sh | bash
