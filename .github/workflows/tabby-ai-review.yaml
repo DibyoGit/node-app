@@ -1,0 +1,26 @@
+name: AI Code Review with Tabby
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  tabby-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: pip install -r ai-review/requirements.txt
+
+      - name: Run Tabby PR review
+        env:
+          TABBY_URL: ${{ secrets.TABBY_URL }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python ai-review/review_bot.py
