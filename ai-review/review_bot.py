@@ -4,7 +4,7 @@ from github_api import post_comment
 from tabby_client import get_tabby_review
 
 def get_changed_files():
-    output = subprocess.check_output(["git", "diff", "--name-only", "origin/main...HEAD"])
+    output = subprocess.check_output(["git", "diff", "--name-only", "origin/master...HEAD"])
     return output.decode().splitlines()
 
 def main():
