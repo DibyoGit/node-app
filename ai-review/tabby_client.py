@@ -3,7 +3,7 @@ import os
 from requests.auth import HTTPBasicAuth
 
 def get_tabby_review(prompt: str, tabby_url=None) -> str:
-    tabby_url = tabby_url or os.getenv("TABBY_URL", "http://54.196.243.3:8080/")
+    tabby_url = tabby_url or os.getenv("TABBY_URL", "http://54.196.243.3:8080")
     username = os.getenv("TABBY_USERNAME")
     password = os.getenv("TABBY_PASSWORD")
 
