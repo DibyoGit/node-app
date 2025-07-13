@@ -7,6 +7,10 @@ def get_tabby_review(prompt: str, tabby_url=None) -> str:
     username = os.getenv("TABBY_USERNAME")
     password = os.getenv("TABBY_PASSWORD")
 
+    if not username or not password:
+        print("⚠️ Missing TabbyML credentials. Set TABBY_USERNAME and TABBY_PASSWORD.")
+        return "⚠️ Error: Missing credentials for TabbyML."
+
     try:
         response = requests.post(
             f"{tabby_url}/v1/chat/completions",
@@ -21,5 +25,5 @@ def get_tabby_review(prompt: str, tabby_url=None) -> str:
         return response.json()["choices"][0]["message"]["content"]
 
     except requests.exceptions.RequestException as e:
-        print(f"Error:  Failed to communicate with TabbyML: {e}")
+        print(f"Error: Failed to communicate with TabbyML: {e}")
         return "⚠️ Error: Unable to connect to TabbyML server."
