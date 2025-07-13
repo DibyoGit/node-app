@@ -1,30 +1,25 @@
-import os
+import json
 import requests
 
-TABBY_URL = os.getenv("TABBY_URL", "http://localhost:8080")
-TABBY_AUTH_TOKEN = os.getenv("TABBY_AUTH_TOKEN", "")  # Optional
+TABBY_URL = "http://54.196.243.3:8080"
+TABBY_AUTH_TOKEN = "auth_9675f108605f42f8bad46e5324d756ab"  # <-- your manual token
 
 def get_tabby_review(prompt: str) -> str:
     headers = {
+        "Authorization": f"Bearer {TABBY_AUTH_TOKEN}",
         "Content-Type": "application/json"
     }
-    if TABBY_AUTH_TOKEN:
-        headers["Authorization"] = f"Bearer {TABBY_AUTH_TOKEN}"
 
     payload = {
-        "model": "Qwen2-1.5B-Instruct",  # or "StarCoder-1B" if Qwen2 fails
-        "messages": [
-            {"role": "user", "content": prompt}
-        ],
-        "stream": True  # ✅ Required to avoid the invalid args error
+        "model": "Qwen2-1.5B-Instruct",
+        "messages": [{"role": "user", "content": prompt}],
+        "stream": True
     }
 
-    response = requests.post(
-        f"{TABBY_URL}/v1/chat/completions",
-        headers=headers,
-        json=payload,
-        stream=True  # ✅ Required to handle streaming properly
-    )
+    response = requests.post(f"{TABBY_URL}/v1/chat/completions",
+                             headers=headers,
+                             json=payload,
+                             stream=True)
 
     if response.status_code != 200:
         raise RuntimeError(f"Tabby Error: {response.status_code} - {response.text}")
@@ -40,7 +35,6 @@ def get_tabby_review(prompt: str) -> str:
                 delta = json_chunk["choices"][0]["delta"]
                 result += delta.get("content", "")
             except Exception as e:
-                print("⚠️ Error parsing chunk:", e)
-                continue
+                print(f"⚠️ Error parsing chunk: {e}")
 
     return result.strip()
