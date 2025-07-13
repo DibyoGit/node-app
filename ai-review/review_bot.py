@@ -16,7 +16,7 @@ def get_pull_request_number():
     try:
         return GITHUB_REF.split("/")[2]
     except IndexError:
-        raise RuntimeError(f"Cannot extract PR number from GITHUB_REF='{GITHUB_REF}'")
+        raise RuntimeError(f"❌ Cannot extract PR number from GITHUB_REF='{GITHUB_REF}'")
 
 
 def get_changed_files(pr_number):
@@ -60,15 +60,15 @@ def main():
             with open(file_path, "r", encoding="utf-8") as f:
                 code = f.read()
 
-            prompt = f"Review this code and suggest improvements:\n\n{code}"
+            prompt = f"Please review and suggest improvements for the following code:\n\n{code}"
             suggestion = get_tabby_review(prompt, tabby_url=TABBY_URL)
 
             comment_body = f"💡 **AI Review Suggestion for `{file_path}`**\n\n{suggestion}"
             post_comment(pr_number, comment_body)
-            print(f"✅ Comment posted for {file_path}")
+            print(f"✅ Comment posted for `{file_path}`")
 
         except Exception as e:
-            print(f"⚠️ Skipping file `{file_path}` due to error: {e}")
+            print(f"⚠️ Skipping `{file_path}` due to error: {e}")
 
 
 if __name__ == "__main__":
