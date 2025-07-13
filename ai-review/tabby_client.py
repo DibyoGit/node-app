@@ -1,11 +1,12 @@
+import os
 import requests
 
-TABBY_URL = "http://54.196.243.3:8080/v1/chat/completions"
-JWT_TOKEN = "auth_9675f108605f42f8bad46e5324d756ab"  # Replace with your actual token if it changes
+def get_tabby_review(prompt: str) -> str:
+    tabby_url = os.getenv("TABBY_URL", "http://localhost:8080")
+    jwt_token = os.getenv("TABBY_API_TOKEN", "auth_9675f108605f42f8bad46e5324d756ab")
 
-def get_tabby_review(code_snippet: str) -> str:
     headers = {
-        "Authorization": f"Bearer {JWT_TOKEN}",
+        "Authorization": f"Bearer {jwt_token}",
         "Content-Type": "application/json"
     }
 
@@ -13,11 +14,10 @@ def get_tabby_review(code_snippet: str) -> str:
         "model": "Qwen2-1.5B-Instruct",
         "stream": False,
         "messages": [
-            {"role": "user", "content": f"Please review the following code:\n\n{code_snippet}"}
+            { "role": "user", "content": prompt }
         ]
     }
 
-    response = requests.post(TABBY_URL, headers=headers, json=payload)
+    response = requests.post(f"{tabby_url}/v1/chat/completions", headers=headers, json=payload)
     response.raise_for_status()
-
     return response.json()["choices"][0]["message"]["content"]
